@@ -25,34 +25,61 @@ const particles = Array.from({ length: 26 }, (_, i) => ({
   <section class="hero" aria-labelledby="hero-title">
     <div class="hero-light" aria-hidden="true">
       <div class="corner"></div>
+      <div class="edge"></div>
       <div class="halo"></div>
-      <div class="horizon"><i></i></div>
+      <div class="horizon" data-hz><i><b class="rim"></b></i></div>
       <div class="beam"></div>
       <div class="pts">{particles.map((p) => <i style={`--x:${p.x}%;--y:${p.y}%;--s:${p.s}px;--t:${p.t}s;--dl:${p.d}s`}></i>)}</div>
     </div>
     <div class="mglow" aria-hidden="true"></div>
 
     <div class="wrap hero-copy">
-      <span class="label ok" data-reveal>{site.available ? 'Open to new opportunities' : 'Currently busy'}</span>
-      <h1 id="hero-title" class="h1 split grad">Designing calm, clear products people <span class="acc">love</span> to use.</h1>
-      <p class="lead" data-reveal style="--d:500">I’m Abdul Rahman — a UI/UX &amp; product designer crafting web apps, mobile apps, SaaS dashboards and AI interfaces, from the first research question to the final pixel.</p>
-      <div class="ctas" data-reveal style="--d:650">
-        <a class="btn btn-p" href="#work">View selected work <span class="arr">→</span></a>
-        <a class="btn btn-g" href={site.cv} download>Download CV</a>
+      <span class="label ok" data-reveal style="--d:150"><span data-type data-delay="900">{site.available ? 'Open to new opportunities' : 'Currently busy'}</span></span>
+      <h1 id="hero-title" class="h1 split grad" style="--sd:300ms">Designing calm, clear products people <span class="acc">love</span> to use.</h1>
+      <p class="lead" data-reveal style="--d:950">I’m Abdul Rahman — a UI/UX &amp; product designer crafting web apps, mobile apps, SaaS dashboards and AI interfaces, from the first research question to the final pixel.</p>
+      <div class="ctas" data-reveal style="--d:1120">
+        <a class="btn btn-p mag" href="#work">View selected work <span class="arr">→</span></a>
+        <a class="btn btn-g mag" href={site.cv} download>Download CV</a>
       </div>
-      <p class="proof" data-reveal style="--d:800"><span>{site.location}</span><i></i><span>~3 years experience</span><i></i><span>Web · Mobile · SaaS · AI</span></p>
+      <p class="proof" data-reveal style="--d:1280"><span>{site.location}</span><i></i><span>~3 years experience</span><i></i><span>Web · Mobile · SaaS · AI</span></p>
     </div>
 
     <div class="stage" data-tilt>
-      <svg class="orbits" viewBox="0 0 1800 640" aria-hidden="true" preserveAspectRatio="none">
-        <ellipse cx="900" cy="300" rx="760" ry="250" />
-        <ellipse cx="900" cy="300" rx="890" ry="310" />
+      <svg class="orbits" viewBox="0 0 1640 640" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <linearGradient id="oG" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0" stop-color="#7C6CFF" stop-opacity="0" />
+            <stop offset=".14" stop-color="#C9C1FF" stop-opacity=".95" />
+            <stop offset=".5" stop-color="#7C6CFF" stop-opacity=".22" />
+            <stop offset=".86" stop-color="#C9C1FF" stop-opacity=".95" />
+            <stop offset="1" stop-color="#7C6CFF" stop-opacity="0" />
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-6 820 320)">
+          <path id="e1" class="ring" pathLength="1" stroke="url(#oG)" d="M 0 320 A 820 250 0 1 0 1640 320 A 820 250 0 1 0 0 320" />
+          <g class="sats" fill="#fff">
+            <circle r="4.5"><animateMotion dur="26s" repeatCount="indefinite"><mpath href="#e1" /></animateMotion></circle>
+            <circle r="3" opacity=".45"><animateMotion dur="26s" begin="-.25s" repeatCount="indefinite"><mpath href="#e1" /></animateMotion></circle>
+            <circle r="3.5"><animateMotion dur="26s" begin="-13s" repeatCount="indefinite"><mpath href="#e1" /></animateMotion></circle>
+            <circle r="3"><animateMotion dur="26s" begin="-6s" repeatCount="indefinite"><mpath href="#e1" /></animateMotion></circle>
+          </g>
+        </g>
+        <g transform="rotate(5 820 340)">
+          <path id="e2" class="ring r2" pathLength="1" stroke="url(#oG)" d="M 160 340 A 660 180 0 1 1 1480 340 A 660 180 0 1 1 160 340" />
+          <g class="sats" fill="#E4E0FF">
+            <circle r="3.5"><animateMotion dur="19s" repeatCount="indefinite"><mpath href="#e2" /></animateMotion></circle>
+            <circle r="2.4" opacity=".45"><animateMotion dur="19s" begin="-.2s" repeatCount="indefinite"><mpath href="#e2" /></animateMotion></circle>
+            <circle r="3"><animateMotion dur="19s" begin="-9.5s" repeatCount="indefinite"><mpath href="#e2" /></animateMotion></circle>
+          </g>
+        </g>
       </svg>
       <div class="ug" aria-hidden="true"></div>
+      <div class="rise">
       <div class="fan">
         <img class="shot s1" src="/work/cover-hotello.webp" alt="" width="808" height="632" />
         <img class="shot s3" src="/work/cover-ai-analyst.webp" alt="" width="808" height="632" />
         <img class="shot s2" src="/work/cover-mushaf.webp" alt="Mushaf Eqraa — Quran web platform case study cover" width="808" height="632" fetchpriority="high" />
+      </div>
       </div>
       <div class="chip c1" data-dep="18"><div class="glass bob"><span class="ic" style="--c:#7C6CFF">✦</span><div><b>Case studies</b><small>Full process on Behance</small></div></div></div>
       <div class="chip c2" data-dep="24"><div class="glass bob"><span class="ic" style="--c:#FFB547">ع</span><div><b>Arabic-first</b><small>RTL · LTR products</small></div></div></div>
@@ -283,12 +310,24 @@ const particles = Array.from({ length: 26 }, (_, i) => ({
 
 <style>
   /* ---------- hero ---------- */
-  .hero { position: relative; padding-top: clamp(150px, 18vw, 230px); text-align: center; }
+  .hero { position: relative; padding-top: clamp(150px, 18vw, 230px); text-align: center; overflow: clip; overflow-clip-margin: 0; }
   .hero-light { position: absolute; inset: 0 0 auto; height: 1400px; overflow: hidden; pointer-events: none; }
   .corner { position: absolute; left: -180px; top: -180px; width: 620px; height: 480px; background: radial-gradient(closest-side, rgba(185, 176, 255, 0.18), transparent); animation: breathe 7s ease-in-out infinite; }
   .halo { position: absolute; left: 50%; top: -40px; width: min(1300px, 140vw); height: 420px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(124, 108, 255, 0.36), transparent); animation: breathe 6s ease-in-out infinite; }
-  .horizon { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(180deg, #000 0, #000 32%, transparent 60%); mask-image: linear-gradient(180deg, #000 0, #000 32%, transparent 60%); }
+  .edge { position: absolute; left: 20px; right: 20px; top: 14px; height: 1400px; border-radius: 40px; border: 1.5px solid transparent; background: linear-gradient(135deg, rgba(255, 255, 255, 0.85), rgba(185, 176, 255, 0.5) 10%, rgba(124, 108, 255, 0.12) 30%, transparent 55%) border-box; -webkit-mask: linear-gradient(#000 0 0) padding-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .horizon { position: absolute; inset: 0; transform: translateY(var(--hzy, 0px)); -webkit-mask-image: linear-gradient(180deg, #000 0, #000 32%, transparent 60%); mask-image: linear-gradient(180deg, #000 0, #000 32%, transparent 60%); }
   .horizon i { position: absolute; left: 50%; top: 150px; width: max(1700px, 130vw); aspect-ratio: 1; border-radius: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #1a1550, #0c0b22 5%, var(--bg) 16%); box-shadow: 0 0 0 1.5px rgba(228, 224, 255, 0.95), 0 0 56px 6px rgba(124, 108, 255, 0.75), inset 0 40px 90px rgba(124, 108, 255, 0.4); }
+  /* a bright spot of light that sweeps back and forth along the planet's rim */
+  .rim { position: absolute; inset: -2px; border-radius: 50%; animation: sweepRim 9s ease-in-out infinite alternate; }
+  .rim::before, .rim::after { content: ''; position: absolute; border-radius: 50%; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; }
+  .rim::after { inset: 0; padding: 3px; background: conic-gradient(from calc(var(--ang) - 16deg), transparent 0deg, #fff 16deg, transparent 32deg, transparent 360deg); filter: drop-shadow(0 0 8px #fff) drop-shadow(0 0 22px #b9b0ff); }
+  .rim::before { inset: 0; padding: 90px; background: conic-gradient(from calc(var(--ang) - 22deg), transparent 0deg, rgba(185, 176, 255, 0.32) 24deg, transparent 48deg, transparent 360deg); filter: blur(40px); }
+  @property --ang { syntax: '<angle>'; inherits: true; initial-value: -34deg; }
+  @keyframes sweepRim { from { --ang: -34deg; } to { --ang: 34deg; } }
+  :global(.js) .horizon i { animation: hzIn 2.2s var(--ease) 0.25s both; }
+  :global(.js) .edge { animation: edgeIn 2.4s var(--ease) 0.2s both; }
+  @keyframes hzIn { from { opacity: 0; transform: translateX(-50%) translateY(260px); } }
+  @keyframes edgeIn { from { opacity: 0; clip-path: inset(0 100% 100% 0); } to { opacity: 1; clip-path: inset(0 0 0 0); } }
   .beam { position: absolute; left: 50%; top: 40px; width: 240px; height: 700px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(255, 255, 255, 0.08), transparent); }
   .pts i { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; background: var(--core); box-shadow: 0 0 8px var(--acc); animation: twinkle var(--t) ease-in-out var(--dl) infinite; }
   .mglow { position: absolute; left: 0; top: 0; width: 640px; height: 640px; margin: -320px 0 0 -320px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(124, 108, 255, 0.12), transparent); transition: transform 0.6s var(--ease); z-index: 0; }
@@ -299,9 +338,18 @@ const particles = Array.from({ length: 26 }, (_, i) => ({
   .proof i { width: 4px; height: 4px; border-radius: 50%; background: rgba(185, 176, 255, 0.6); }
 
   .stage { position: relative; margin-top: clamp(60px, 8vw, 90px); height: clamp(340px, 42vw, 560px); perspective: 1800px; }
-  .orbits { position: absolute; left: 50%; top: -40px; width: max(1700px, 125vw); height: 640px; transform: translateX(-50%); overflow: visible; pointer-events: none; }
-  .orbits ellipse { fill: none; stroke: rgba(185, 176, 255, 0.45); stroke-width: 1.2; filter: drop-shadow(0 0 6px rgba(124, 108, 255, 0.8)); }
-  .orbits ellipse + ellipse { stroke: rgba(185, 176, 255, 0.25); }
+  .orbits { position: absolute; left: 50%; top: -80px; width: max(1640px, 120vw); height: auto; aspect-ratio: 1640 / 640; transform: translateX(-50%); overflow: visible; pointer-events: none; }
+  .ring { fill: none; stroke-width: 1.4; filter: drop-shadow(0 0 6px rgba(124, 108, 255, 0.85)); stroke-dasharray: 1; }
+  .ring.r2 { opacity: 0.7; }
+  .sats { filter: drop-shadow(0 0 8px #7c6cff) drop-shadow(0 0 2px #fff); }
+  :global(.js) .ring { animation: drawRing 2.6s var(--ease) 0.7s both; }
+  :global(.js) .ring.r2 { animation-delay: 1s; }
+  :global(.js) .sats { animation: fadeIn 1.2s var(--ease) 2.2s both; }
+  @keyframes drawRing { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+  @keyframes fadeIn { from { opacity: 0; } }
+  .rise { height: 100%; }
+  :global(.js) .rise { animation: riseIn 1.6s var(--ease) 0.45s both; }
+  @keyframes riseIn { from { opacity: 0; transform: translateY(110px); filter: blur(8px); } }
   .ug { position: absolute; left: 50%; top: -30px; width: min(1000px, 90vw); height: 300px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(124, 108, 255, 0.45), transparent); pointer-events: none; }
   .fan { position: relative; height: 100%; transform: rotateX(var(--tilt, 18deg)) scale(var(--ts, 0.94)); transform-origin: 50% 0; will-change: transform; }
   .shot { position: absolute; top: 0; left: 50%; width: min(620px, 52vw); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.14); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.7), 0 0 70px rgba(124, 108, 255, 0.18); }
@@ -315,6 +363,9 @@ const particles = Array.from({ length: 26 }, (_, i) => ({
   .chip b { display: block; font-size: 13px; font-weight: 500; }
   .chip small { display: block; font-size: 11px; color: var(--faint); }
   .chip .ic { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; font-size: 14px; font-weight: 600; color: #fff; background: linear-gradient(180deg, var(--c), color-mix(in srgb, var(--c) 45%, transparent)); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 40%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+  :global(.js) .chip { animation: chipIn 1.2s var(--ease) both; animation-delay: calc(1.5s + var(--k, 0) * 0.15s); }
+  @keyframes chipIn { from { opacity: 0; translate: 0 40px; scale: 0.9; } }
+  .c2 { --k: 1; } .c3 { --k: 2; } .c4 { --k: 3; }
   .c1 { left: clamp(8px, 7vw, 120px); top: 10%; rotate: 3deg; }
   .c2 { left: clamp(8px, 5vw, 90px); top: 56%; rotate: -2.5deg; }
   .c2 .glass { animation-duration: 8.5s; animation-delay: -3s; }
@@ -341,7 +392,7 @@ const particles = Array.from({ length: 26 }, (_, i) => ({
   .big { display: flex; align-items: baseline; gap: 6px; font-weight: 200; font-size: clamp(72px, 9vw, 124px); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
   .big .n { background: linear-gradient(180deg, #fff, rgba(238, 240, 255, 0.45)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .big .suf { font-weight: 300; font-size: 0.5em; color: rgba(238, 240, 255, 0.6); transition: transform 0.6s var(--spring), opacity 0.4s; }
-  .js .stat:not(.done) .suf { opacity: 0; transform: scale(0.5); }
+  :global(.js) .stat:not(.done) .suf { opacity: 0; transform: scale(0.5); }
   .stat.hot .n, .stat.hot .suf { background: linear-gradient(180deg, #d6cfff, var(--acc)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 30px rgba(124, 108, 255, 0.5)); }
   .stat.hot::after { content: ''; position: absolute; inset: -60px -40px; z-index: -1; background: radial-gradient(closest-side, rgba(124, 108, 255, 0.22), transparent); }
   .sl { font-size: 20px; color: rgba(238, 240, 255, 0.8); }
@@ -523,6 +574,7 @@ const particles = Array.from({ length: 26 }, (_, i) => ({
     .shot.s1, .shot.s3 { width: 44vw; }
     .shot.s2 { width: 74vw; }
     .stage { height: 64vw; }
+    .orbits { width: 230vw; top: -24px; }
     .be-btn { padding-left: 20px; }
   }
 </style>

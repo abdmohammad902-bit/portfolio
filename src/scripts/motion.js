@@ -2,7 +2,6 @@ import Lenis from 'lenis';
 
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const fine = matchMedia('(pointer: fine)').matches;
-document.documentElement.classList.add('js');
 
 /* ---------- smooth scroll ---------- */
 let lenis = null;
@@ -46,6 +45,11 @@ document.querySelectorAll('.split').forEach((el) => {
     });
   };
   walk(el);
+  // once the last word lands, let glows breathe outside their masks
+  el.addEventListener('reveal', () => {
+    const sd = parseFloat(getComputedStyle(el).getPropertyValue('--sd')) || 0;
+    setTimeout(() => el.classList.add('done'), sd + i * 65 + 1150);
+  }, { once: true });
 });
 
 /* ---------- reveal on scroll ---------- */
@@ -103,6 +107,23 @@ const onScroll = () => {
 const scrollHooks = [sweep];
 addEventListener('scroll', onScroll, { passive: true });
 
+/* ---------- typing badge ---------- */
+document.querySelectorAll('[data-type]').forEach((el) => {
+  if (reduce) return;
+  const txt = el.textContent; el.textContent = ''; el.classList.add('typing');
+  setTimeout(() => {
+    let k = 0;
+    const t = setInterval(() => {
+      el.textContent = txt.slice(0, ++k);
+      if (k >= txt.length) { clearInterval(t); setTimeout(() => el.classList.remove('typing'), 1600); }
+    }, 38);
+  }, +el.dataset.delay || 0);
+});
+
+/* ---------- hero planet drifts up with scroll ---------- */
+const hz = document.querySelector('[data-hz]');
+if (hz && !reduce) scrollHooks.push((y) => { if (y < innerHeight * 1.5) hz.style.setProperty('--hzy', `${(-y * 0.18).toFixed(1)}px`); });
+
 /* ---------- hero: tilted stage flattens with scroll ---------- */
 const stage = document.querySelector('[data-tilt]');
 if (stage && !reduce) {
@@ -126,6 +147,15 @@ if (fine && !reduce) {
     });
     if (glowEl) glowEl.style.transform = `translate(${e.clientX}px, ${e.clientY + scrollY}px)`;
   }, { passive: true });
+  // magnetic buttons
+  document.querySelectorAll('.mag').forEach((el) => {
+    el.addEventListener('pointermove', (e) => {
+      const r = el.getBoundingClientRect();
+      const dx = (e.clientX - r.left - r.width / 2) / r.width, dy = (e.clientY - r.top - r.height / 2) / r.height;
+      el.style.transform = `translate(${dx * 10}px, ${dy * 8}px)`;
+    });
+    el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+  });
   document.querySelectorAll('.spot').forEach((el) =>
     el.addEventListener('pointermove', (e) => {
       const r = el.getBoundingClientRect();
