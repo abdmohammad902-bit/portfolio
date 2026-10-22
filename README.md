@@ -5,7 +5,7 @@ Dark, glowing portfolio built with [Astro](https://astro.build) (static HTML, al
 ## Edit content
 Everything you'll change lives in **`src/data/site.js`**: links, stats, projects, experience, tools.
 
-- Photo: add `public/me.webp`, then in `src/pages/index.astro` replace the `<span>Your photo</span>` with `<img src="/me.webp" alt="Abdul Rahman Mohammad" />`.
+- Photo: `public/me.webp` (transparent background cutout). Replace the file to change it.
 - CV: put your PDF at `public/cv.pdf`.
 - Project images live in `public/work/`.
 - New case study page: copy `src/pages/work/mushaf-eqraa.astro`, rename it, and point the project's `href` to it.
