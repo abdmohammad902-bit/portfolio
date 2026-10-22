@@ -1,0 +1,528 @@
+---
+import Base from '../layouts/Base.astro';
+import { site, stats, categories, projects, process, experience, tools } from '../data/site.js';
+
+const count = (id) => (id === 'all' ? projects.length : projects.filter((p) => p.cats.includes(id)).length);
+const hexToRgb = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)).join(',');
+
+// process arc: cubic bezier in a 1200 x 460 box
+const P = [[0, 440], [300, -10], [900, -10], [1200, 440]];
+const bez = (t) => {
+  const u = 1 - t;
+  const x = u ** 3 * P[0][0] + 3 * u * u * t * P[1][0] + 3 * u * t * t * P[2][0] + t ** 3 * P[3][0];
+  const y = u ** 3 * P[0][1] + 3 * u * u * t * P[1][1] + 3 * u * t * t * P[2][1] + t ** 3 * P[3][1];
+  return [x, y];
+};
+const ts = [0.07, 0.285, 0.5, 0.715, 0.93];
+const arcD = `M ${P[0]} C ${P[1]} ${P[2]} ${P[3]}`;
+const marquee = ['Web apps', 'Mobile apps', 'SaaS dashboards', 'AI & LLM interfaces', 'Design systems', 'UX research', 'Landing pages', 'Arabic-first products'];
+const particles = Array.from({ length: 26 }, (_, i) => ({
+  x: (i * 37.7) % 100, y: (i * 23.3) % 70, s: i % 5 === 0 ? 3 : 2, t: 3 + (i % 5), d: (i % 7) * 0.6,
+}));
+---
+<Base>
+  <!-- ============ HERO ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-light" aria-hidden="true">
+      <div class="corner"></div>
+      <div class="halo"></div>
+      <div class="horizon"><i></i></div>
+      <div class="beam"></div>
+      <div class="pts">{particles.map((p) => <i style={`--x:${p.x}%;--y:${p.y}%;--s:${p.s}px;--t:${p.t}s;--dl:${p.d}s`}></i>)}</div>
+    </div>
+    <div class="mglow" aria-hidden="true"></div>
+
+    <div class="wrap hero-copy">
+      <span class="label ok" data-reveal>{site.available ? 'Open to new opportunities' : 'Currently busy'}</span>
+      <h1 id="hero-title" class="h1 split grad">Designing calm, clear products people <span class="acc">love</span> to use.</h1>
+      <p class="lead" data-reveal style="--d:500">I’m Abdul Rahman — a UI/UX &amp; product designer crafting web apps, mobile apps, SaaS dashboards and AI interfaces, from the first research question to the final pixel.</p>
+      <div class="ctas" data-reveal style="--d:650">
+        <a class="btn btn-p" href="#work">View selected work <span class="arr">→</span></a>
+        <a class="btn btn-g" href={site.cv} download>Download CV</a>
+      </div>
+      <p class="proof" data-reveal style="--d:800"><span>{site.location}</span><i></i><span>~3 years experience</span><i></i><span>Web · Mobile · SaaS · AI</span></p>
+    </div>
+
+    <div class="stage" data-tilt>
+      <svg class="orbits" viewBox="0 0 1800 640" aria-hidden="true" preserveAspectRatio="none">
+        <ellipse cx="900" cy="300" rx="760" ry="250" />
+        <ellipse cx="900" cy="300" rx="890" ry="310" />
+      </svg>
+      <div class="ug" aria-hidden="true"></div>
+      <div class="fan">
+        <img class="shot s1" src="/work/cover-hotello.webp" alt="" width="808" height="632" />
+        <img class="shot s3" src="/work/cover-ai-analyst.webp" alt="" width="808" height="632" />
+        <img class="shot s2" src="/work/cover-mushaf.webp" alt="Mushaf Eqraa — Quran web platform case study cover" width="808" height="632" fetchpriority="high" />
+      </div>
+      <div class="chip c1" data-dep="18"><div class="glass bob"><span class="ic" style="--c:#7C6CFF">✦</span><div><b>Case studies</b><small>Full process on Behance</small></div></div></div>
+      <div class="chip c2" data-dep="24"><div class="glass bob"><span class="ic" style="--c:#FFB547">ع</span><div><b>Arabic-first</b><small>RTL · LTR products</small></div></div></div>
+      <div class="chip c3" data-dep="14"><div class="glass bob"><span class="ic" style="--c:#5EC8FF">◆</span><div><b>Design systems</b><small>Tokens · components</small></div></div></div>
+      <div class="chip c4" data-dep="20"><div class="glass bob"><span class="ic" style="--c:#3DDC97">◎</span><div><b>AI interfaces</b><small>LLM &amp; agent UX</small></div></div></div>
+    </div>
+  </section>
+
+  <!-- ============ MARQUEE ============ -->
+  <section class="mq-sec" aria-label="What I design">
+    <div class="seam"></div>
+    <p class="eyebrow mq-l">What I design</p>
+    <div class="mq">
+      <div class="mq-t">
+        {[0, 1].map(() => (
+          <div class="mq-g" aria-hidden="true">{marquee.map((m) => <><span class={m.startsWith('AI') ? 'hl' : ''}>{m}</span><em>✦</em></>)}</div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STATS ============ -->
+  <section class="sec stats-sec" aria-labelledby="stats-title">
+    <div class="blob" style="--o:.16;width:900px;height:360px;left:50%;top:44%;translate:-50% 0"></div>
+    <div class="wrap">
+      <div class="sh">
+        <p class="eyebrow" data-reveal>By the numbers</p>
+        <h2 id="stats-title" class="h2 split grad">Three years in, still obsessed with the <span class="acc">details.</span></h2>
+      </div>
+      <div class="stats">
+        {stats.map((s, i) => (
+          <div class={`stat ${s.hot ? 'hot' : ''}`} data-count={s.value} data-reveal style={`--d:${i * 120}`}>
+            <p class="big"><span class="n">{s.value}</span><span class="suf">{s.suffix}</span></p>
+            <p class="sl">{s.label}</p>
+            <p class="ss">{s.sub}</p>
+            <p class="sn mono">{s.note}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ WORK ============ -->
+  <section id="work" class="sec work" aria-labelledby="work-title">
+    <div class="blob" style="--o:.12;width:900px;height:500px;left:-300px;top:30%"></div>
+    <div class="wrap">
+      <div class="sh">
+        <span class="label" data-reveal>Selected work</span>
+        <h2 id="work-title" class="h2 split grad">Selected work that shows the <span class="acc">thinking</span></h2>
+        <p class="lead" data-reveal>Each project walks from research and flows to the final UI — the decisions are the point.</p>
+      </div>
+
+      <div class="filter-row" data-reveal>
+        <div class="tabs" role="tablist" aria-label="Filter projects" data-tabs>
+          <span class="pill" aria-hidden="true"></span>
+          {categories.map((c, i) => (
+            <button role="tab" data-cat={c.id} aria-selected={i === 0 ? 'true' : 'false'}>{c.label}<em>{count(c.id)}</em></button>
+          ))}
+        </div>
+        <a class="be-btn" href={site.behance} target="_blank" rel="noopener">
+          <span class="be-l"><b>Bē</b> Behance</span>
+          <span class="be-c" aria-hidden="true">↗</span>
+        </a>
+      </div>
+
+      <div class="work-grid" data-filter="all">
+        {projects.map((p, i) => {
+          const Tag = p.href ? 'a' : 'div';
+          const ext = p.href?.startsWith('http');
+          return (
+            <Tag
+              class={`work-card card spot ${p.size}`}
+              data-cats={p.cats.join(' ')}
+              href={p.href || undefined}
+              target={ext ? '_blank' : undefined}
+              rel={ext ? 'noopener' : undefined}
+              style={`--ca:${hexToRgb(p.accent)};--d:${(i % 2) * 120}`}
+              data-reveal
+            >
+              <div class="wc-img">
+                <img src={p.cover} alt={`${p.title} cover`} loading="lazy" width="808" height="632" />
+                <span class={`type ${p.type === 'Case study' ? 'cs' : 'lp'}`}>{p.type}</span>
+              </div>
+              <div class="wc-body">
+                <ul class="wc-tags">{p.tags.map((t) => <li class="tag">{t}</li>)}</ul>
+                <div class="wc-title"><h3>{p.title}</h3><span class="wc-arr" aria-hidden="true">{p.href ? '↗' : 'Soon'}</span></div>
+                <p>{p.desc}</p>
+              </div>
+            </Tag>
+          );
+        })}
+        <a class="see-all card spot" href={site.behance} target="_blank" rel="noopener" data-cats="case web app" data-reveal>
+          <span>See all work on Behance</span><span class="arr">↗</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT ============ -->
+  <section id="about" class="sec about" aria-labelledby="about-title">
+    <div class="seam"></div>
+    <div class="wrap">
+      <div class="sh">
+        <span class="label" data-reveal>About</span>
+        <h2 id="about-title" class="h2 split grad">A designer who <span class="acc">listens</span> first.</h2>
+        <p class="lead" data-reveal>I care about the moment a product finally makes sense to someone — that’s what I design for.</p>
+      </div>
+      <div class="bento">
+        <div class="card portrait" data-reveal>
+          <div class="blob" style="--o:.35;width:460px;height:300px;left:60px;top:-180px"></div>
+          <div class="ring">
+            <!-- TODO: replace with <img src="/me.webp" alt="Abdul Rahman Mohammad" /> -->
+            <span>Your photo</span>
+          </div>
+          <div class="orbit-ring" aria-hidden="true"><i></i></div>
+          <div class="who glass"><b>{site.fullName}</b><small>{site.role}</small></div>
+        </div>
+        <div class="card intro" data-reveal style="--d:120">
+          <div class="blob" style="--o:.22;width:460px;height:300px;right:-120px;top:-150px"></div>
+          <p class="eyebrow">Hello</p>
+          <p class="big-p">I’m a UI/UX and product designer based in Sharjah. For around three years I’ve designed web apps, mobile apps, SaaS dashboards and AI-powered interfaces — most recently as a UI/UX designer at Misraj Technology, and before that as a freelancer and graphic designer.</p>
+          <p class="small-p">I work across the whole process: research, flows, wireframes, UI, design systems and design QA on the real build.</p>
+          <div class="mini-stats">
+            <div><b class="acc">~3</b><span>years designing</span></div>
+            <div><b>5</b><span>stage process</span></div>
+            <div><b>AR · EN</b><span>languages</span></div>
+          </div>
+        </div>
+        <div class="card loc" data-reveal>
+          <p class="eyebrow">Based in</p>
+          <h3>{site.location}</h3>
+          <p class="sub">Working remotely across the GCC</p>
+          <div class="dots" aria-hidden="true">{Array.from({ length: 126 }, (_, i) => <i class={Math.hypot((i % 18) - 12, Math.floor(i / 18) - 3) < 3.2 ? 'near' : ''}></i>)}<b class="ping"></b></div>
+        </div>
+        <div class="card edu" data-reveal style="--d:120">
+          <p class="eyebrow">Learning</p>
+          <ul>
+            <li><span class="ei">◐</span><div><b>BSc Data Science</b><small>IU International University · in progress</small></div></li>
+            <li><span class="ei">✓</span><div><b>Professional Diploma in UX Design</b><small>UX Design Institute</small></div></li>
+          </ul>
+        </div>
+        <div class="card kit" data-reveal style="--d:240">
+          <p class="eyebrow">Toolkit</p>
+          <h3>Design → prototype → code</h3>
+          <ul class="tools">{tools.map((t) => <li><span style={`--f1:${t.from};--f2:${t.to}`}>{t.glyph}</span><small>{t.name}</small></li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROCESS ============ -->
+  <section id="process" class="sec process" aria-labelledby="process-title">
+    <div class="seam"></div>
+    <div class="wrap">
+      <div class="sh">
+        <span class="label" data-reveal>How I work</span>
+        <h2 id="process-title" class="h2 split grad">From a fuzzy problem to a <span class="acc">clear</span> product.</h2>
+      </div>
+      <div class="arc-wrap" data-arc>
+        <div class="planet" aria-hidden="true"></div>
+        <svg class="arc" viewBox="0 0 1200 460" aria-hidden="true">
+          <defs><linearGradient id="arcG" x1="0" x2="1"><stop offset="0" stop-color="#7C6CFF" stop-opacity=".3" /><stop offset=".5" stop-color="#E4E0FF" /><stop offset="1" stop-color="#7C6CFF" /></linearGradient></defs>
+          <path class="base" d={arcD} />
+          <path class="draw" d={arcD} />
+        </svg>
+        <ol class="steps">
+          {process.map((s, i) => {
+            const [x, y] = bez(ts[i]);
+            return (
+              <li class={`step ${s.hot ? 'hot' : ''}`} data-t={ts[i]} style={`--x:${(x / 1200) * 100}%;--y:${(y / 460) * 100}%`}>
+                <span class="node">{s.n}</span>
+                <div class="scard glass">
+                  <h3>{s.title}</h3>
+                  <p>{s.text}</p>
+                  <div class="chips">{s.chips.map((c) => <span>{c}</span>)}</div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section id="experience" class="sec exp" aria-labelledby="exp-title">
+    <div class="seam"></div>
+    <div class="wrap narrow">
+      <div class="sh">
+        <span class="label" data-reveal>Experience</span>
+        <h2 id="exp-title" class="h2 split grad">Where I’ve <span class="acc">grown</span> so far.</h2>
+      </div>
+      <ol class="timeline" data-timeline>
+        {experience.map((e, i) => (
+          <li class={`job card ${e.current ? 'on' : ''}`} data-reveal style={`--d:${i * 100}`}>
+            <div class="j-l"><p class="mono">{e.period}</p>{e.current && <span class="label ok">Most recent</span>}</div>
+            <div class="j-r">
+              <h3>{e.role}</h3>
+              <p class="co">{e.company}</p>
+              <p class="tx">{e.text}</p>
+              <ul class="wc-tags">{e.tags.map((t) => <li class="tag">{t}</li>)}</ul>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ CONTACT ============ -->
+  <section id="contact" class="sec" aria-labelledby="cta-title">
+    <div class="wrap">
+      <div class="cta" data-reveal>
+        <div class="grid-bg" aria-hidden="true"></div>
+        <div class="cone" aria-hidden="true"></div>
+        <div class="rings" aria-hidden="true"><i style="--w:1100px;--h:260px;--o:.5;--d:40s"></i><i style="--w:820px;--h:190px;--o:.35;--d:30s"></i><i style="--w:560px;--h:130px;--o:.25;--d:22s"></i></div>
+        <span class="label ok">Contact</span>
+        <h2 id="cta-title" class="h1 grad">Let’s build something <span class="acc">calm</span> together.</h2>
+        <p class="lead">Open to full-time roles and freelance projects. Tell me about your product — I usually reply within a day.</p>
+        <div class="ctas">
+          <a class="btn btn-p" href={`mailto:${site.email}`}>Email me <span class="arr">→</span></a>
+          <a class="btn btn-g" href={site.behance} target="_blank" rel="noopener">Behance ↗</a>
+          <a class="btn btn-g" href={site.linkedin} target="_blank" rel="noopener">LinkedIn ↗</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ---------- hero ---------- */
+  .hero { position: relative; padding-top: clamp(150px, 18vw, 230px); text-align: center; }
+  .hero-light { position: absolute; inset: 0 0 auto; height: 1400px; overflow: hidden; pointer-events: none; }
+  .corner { position: absolute; left: -180px; top: -180px; width: 620px; height: 480px; background: radial-gradient(closest-side, rgba(185, 176, 255, 0.18), transparent); animation: breathe 7s ease-in-out infinite; }
+  .halo { position: absolute; left: 50%; top: -40px; width: min(1300px, 140vw); height: 420px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(124, 108, 255, 0.36), transparent); animation: breathe 6s ease-in-out infinite; }
+  .horizon { position: absolute; inset: 0; -webkit-mask-image: linear-gradient(180deg, #000 0, #000 32%, transparent 60%); mask-image: linear-gradient(180deg, #000 0, #000 32%, transparent 60%); }
+  .horizon i { position: absolute; left: 50%; top: 150px; width: max(1700px, 130vw); aspect-ratio: 1; border-radius: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #1a1550, #0c0b22 5%, var(--bg) 16%); box-shadow: 0 0 0 1.5px rgba(228, 224, 255, 0.95), 0 0 56px 6px rgba(124, 108, 255, 0.75), inset 0 40px 90px rgba(124, 108, 255, 0.4); }
+  .beam { position: absolute; left: 50%; top: 40px; width: 240px; height: 700px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(255, 255, 255, 0.08), transparent); }
+  .pts i { position: absolute; left: var(--x); top: var(--y); width: var(--s); height: var(--s); border-radius: 50%; background: var(--core); box-shadow: 0 0 8px var(--acc); animation: twinkle var(--t) ease-in-out var(--dl) infinite; }
+  .mglow { position: absolute; left: 0; top: 0; width: 640px; height: 640px; margin: -320px 0 0 -320px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(124, 108, 255, 0.12), transparent); transition: transform 0.6s var(--ease); z-index: 0; }
+  .hero-copy { position: relative; z-index: 2; display: grid; justify-items: center; gap: 26px; max-width: 1100px; }
+  .hero-copy .lead { max-width: 660px; }
+  .ctas { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+  .proof { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 14px; font-size: 14px; color: var(--faint); }
+  .proof i { width: 4px; height: 4px; border-radius: 50%; background: rgba(185, 176, 255, 0.6); }
+
+  .stage { position: relative; margin-top: clamp(60px, 8vw, 90px); height: clamp(340px, 42vw, 560px); perspective: 1800px; }
+  .orbits { position: absolute; left: 50%; top: -40px; width: max(1700px, 125vw); height: 640px; transform: translateX(-50%); overflow: visible; pointer-events: none; }
+  .orbits ellipse { fill: none; stroke: rgba(185, 176, 255, 0.45); stroke-width: 1.2; filter: drop-shadow(0 0 6px rgba(124, 108, 255, 0.8)); }
+  .orbits ellipse + ellipse { stroke: rgba(185, 176, 255, 0.25); }
+  .ug { position: absolute; left: 50%; top: -30px; width: min(1000px, 90vw); height: 300px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(124, 108, 255, 0.45), transparent); pointer-events: none; }
+  .fan { position: relative; height: 100%; transform: rotateX(var(--tilt, 18deg)) scale(var(--ts, 0.94)); transform-origin: 50% 0; will-change: transform; }
+  .shot { position: absolute; top: 0; left: 50%; width: min(620px, 52vw); border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.14); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.7), 0 0 70px rgba(124, 108, 255, 0.18); }
+  .shot.s1, .shot.s3 { width: min(470px, 38vw); top: 8%; }
+  .shot.s1 { transform: translateX(-118%) rotate(-7deg); }
+  .shot.s3 { transform: translateX(18%) rotate(7deg); }
+  .shot.s2 { transform: translateX(-50%); border-color: rgba(185, 176, 255, 0.45); box-shadow: 0 40px 90px rgba(0, 0, 0, 0.7), 0 0 90px rgba(124, 108, 255, 0.35); }
+  .stage::after { content: ''; position: absolute; left: 50%; bottom: -2px; width: 100vw; height: 55%; transform: translateX(-50%); background: linear-gradient(180deg, rgba(5, 6, 10, 0), var(--bg) 82%); z-index: 4; pointer-events: none; }
+  .chip { position: absolute; z-index: 5; transition: transform 1s var(--ease); }
+  .chip .glass { display: flex; align-items: center; gap: 10px; padding: 12px 16px 12px 12px; border-radius: 16px; text-align: left; animation: bob 7s ease-in-out infinite alternate; }
+  .chip b { display: block; font-size: 13px; font-weight: 500; }
+  .chip small { display: block; font-size: 11px; color: var(--faint); }
+  .chip .ic { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 9px; font-size: 14px; font-weight: 600; color: #fff; background: linear-gradient(180deg, var(--c), color-mix(in srgb, var(--c) 45%, transparent)); box-shadow: 0 0 12px color-mix(in srgb, var(--c) 40%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+  .c1 { left: clamp(8px, 7vw, 120px); top: 10%; rotate: 3deg; }
+  .c2 { left: clamp(8px, 5vw, 90px); top: 56%; rotate: -2.5deg; }
+  .c2 .glass { animation-duration: 8.5s; animation-delay: -3s; }
+  .c3 { right: clamp(8px, 9vw, 150px); top: 4%; rotate: -3deg; }
+  .c3 .glass { animation-duration: 6.5s; animation-delay: -1.2s; }
+  .c4 { right: clamp(8px, 7vw, 110px); top: 46%; rotate: 2deg; }
+  .c4 .glass { animation-duration: 7.8s; animation-delay: -4s; }
+
+  /* ---------- marquee ---------- */
+  .mq-sec { position: relative; padding: 56px 0 40px; text-align: center; }
+  .mq-l { color: var(--faint); margin-bottom: 26px; }
+  .mq { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); mask-image: linear-gradient(90deg, transparent, #000 16%, #000 84%, transparent); }
+  .mq-t { display: flex; width: max-content; animation: mq 40s linear infinite; }
+  .mq:hover .mq-t { animation-play-state: paused; }
+  .mq-g { display: flex; align-items: center; gap: 36px; padding-right: 36px; }
+  .mq-g span { font-weight: 300; font-size: clamp(22px, 2.4vw, 30px); letter-spacing: -0.02em; white-space: nowrap; color: rgba(238, 240, 255, 0.38); transition: color 0.3s; }
+  .mq-g span.hl, .mq-g span:hover { color: var(--fg); }
+  .mq-g em { font-style: normal; color: rgba(185, 176, 255, 0.6); font-size: 15px; }
+
+  /* ---------- stats ---------- */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .stat { position: relative; display: grid; justify-items: center; gap: 12px; padding: 8px 20px; text-align: center; }
+  .stat + .stat::before { content: ''; position: absolute; left: 0; top: -10px; bottom: -10px; width: 1px; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.14), transparent); }
+  .big { display: flex; align-items: baseline; gap: 6px; font-weight: 200; font-size: clamp(72px, 9vw, 124px); line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+  .big .n { background: linear-gradient(180deg, #fff, rgba(238, 240, 255, 0.45)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .big .suf { font-weight: 300; font-size: 0.5em; color: rgba(238, 240, 255, 0.6); transition: transform 0.6s var(--spring), opacity 0.4s; }
+  .js .stat:not(.done) .suf { opacity: 0; transform: scale(0.5); }
+  .stat.hot .n, .stat.hot .suf { background: linear-gradient(180deg, #d6cfff, var(--acc)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 30px rgba(124, 108, 255, 0.5)); }
+  .stat.hot::after { content: ''; position: absolute; inset: -60px -40px; z-index: -1; background: radial-gradient(closest-side, rgba(124, 108, 255, 0.22), transparent); }
+  .sl { font-size: 20px; color: rgba(238, 240, 255, 0.8); }
+  .ss { font-size: 15px; color: var(--faint); }
+  .sn { font-size: 12.5px; color: rgba(238, 240, 255, 0.3); }
+
+  /* ---------- work ---------- */
+  .filter-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 28px; }
+  .tabs { position: relative; display: flex; gap: 4px; padding: 5px; border-radius: 999px; background: rgba(255, 255, 255, 0.035); border: 1px solid rgba(255, 255, 255, 0.09); overflow-x: auto; scrollbar-width: none; }
+  .tabs .pill { position: absolute; top: 5px; bottom: 5px; left: 5px; border-radius: 999px; background: linear-gradient(180deg, #2a2266, #17143a); border: 1px solid rgba(185, 176, 255, 0.5); box-shadow: 0 0 20px rgba(124, 108, 255, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12); transition: transform 0.55s var(--spring), width 0.4s var(--ease); }
+  .tabs button { position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 10px 12px 10px 18px; border-radius: 999px; font-size: 15px; color: var(--muted); white-space: nowrap; transition: color 0.3s; }
+  .tabs button[aria-selected='true'] { color: var(--fg); font-weight: 500; }
+  .tabs em { font: 400 12px var(--mono); font-style: normal; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.06); color: var(--faint); transition: background 0.3s, color 0.3s; }
+  .tabs button[aria-selected='true'] em { background: var(--acc); color: #fff; box-shadow: 0 0 10px rgba(124, 108, 255, 0.6); }
+  .be-btn { position: relative; display: inline-flex; align-items: center; gap: 16px; padding: 6px 6px 6px 26px; border-radius: 999px; overflow: hidden; color: #fff; background: linear-gradient(90deg, #2c4bff, #5b3bff); box-shadow: 0 8px 30px rgba(44, 75, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.35); transition: box-shadow 0.35s; }
+  .be-btn::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.35) 50%, transparent 70%); transform: translateX(-130%); animation: shine 5s var(--ease) 1s infinite; }
+  .be-btn:hover { box-shadow: 0 10px 44px rgba(44, 75, 255, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.35); }
+  .be-l { font-weight: 600; font-size: 17px; letter-spacing: -0.01em; }
+  .be-c { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: #fff; color: #2c4bff; font-size: 20px; transition: transform 0.45s var(--spring); }
+  .be-btn:hover .be-c { transform: rotate(45deg); }
+
+  .work-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+  .work-card { display: flex; flex-direction: column; padding: 12px 12px 26px; }
+  .work-card.wide { grid-column: span 7; }
+  .work-card.narrow { grid-column: span 5; }
+  .work-card.half { grid-column: span 6; }
+  .work-card.strip { grid-column: span 8; flex-direction: row; align-items: center; gap: 20px; padding: 12px 24px 12px 12px; }
+  .work-grid:not([data-filter='all']) .work-card { grid-column: span 6; flex-direction: column; align-items: stretch; padding: 12px 12px 26px; }
+  .work-card.out, .see-all.out { display: none; }
+  .work-card.pop { animation: pop 0.6s var(--ease); }
+  @keyframes pop { from { opacity: 0; transform: translateY(16px) scale(0.97); } }
+  .wc-img { position: relative; overflow: hidden; border-radius: 18px; aspect-ratio: 808 / 560; background: #0e0f18; }
+  .work-card.strip .wc-img { flex: none; width: 170px; aspect-ratio: 3 / 2; border-radius: 14px; }
+  .work-grid:not([data-filter='all']) .work-card.strip .wc-img { width: auto; aspect-ratio: 808 / 560; }
+  .wc-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.9s var(--ease); }
+  .work-card:hover .wc-img img { transform: scale(1.04); }
+  .type { position: absolute; left: 14px; top: 14px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 500; background: rgba(5, 6, 10, 0.6); border: 1px solid rgba(255, 255, 255, 0.16); backdrop-filter: blur(14px); }
+  .type::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--tc); box-shadow: 0 0 6px var(--tc); }
+  .type.cs { --tc: #b9b0ff; }
+  .type.lp { --tc: #5ec8ff; }
+  .work-card.strip .type { display: none; }
+  .wc-body { display: grid; gap: 10px; padding: 22px 14px 0; }
+  .work-card.strip .wc-body { padding: 0; flex: 1; }
+  .wc-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+  .wc-title { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .wc-title h3 { font-weight: 500; font-size: 26px; letter-spacing: -0.03em; }
+  .wc-arr { flex: none; display: grid; place-items: center; min-width: 38px; height: 38px; padding-inline: 10px; border-radius: 999px; font-size: 15px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.12); transition: background 0.35s, box-shadow 0.35s, transform 0.45s var(--spring); }
+  a.work-card:hover .wc-arr { background: linear-gradient(180deg, #a194ff, #6a55ff); border-color: transparent; box-shadow: 0 0 18px rgba(124, 108, 255, 0.6); transform: rotate(45deg); }
+  div.work-card .wc-arr { font-size: 12px; color: var(--faint); }
+  .wc-body > p { font-weight: 300; font-size: 15.5px; line-height: 1.6; color: var(--muted); }
+  .see-all { grid-column: span 4; display: flex; align-items: center; justify-content: center; gap: 14px; min-height: 128px; font-size: 18px; font-weight: 500; background: linear-gradient(180deg, #1a1640, #0c0b1e); border-color: rgba(185, 176, 255, 0.4); box-shadow: 0 0 40px rgba(124, 108, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+  .see-all .arr { color: var(--core); }
+  .work-grid:not([data-filter='all']) .see-all { grid-column: span 12; min-height: 90px; }
+
+  /* ---------- about bento ---------- */
+  .bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 16px; }
+  .bento .card { border-radius: 24px; padding: 32px; }
+  .portrait { grid-column: span 5; min-height: 520px; display: grid; place-items: center; }
+  .ring { position: relative; width: min(300px, 70%); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; overflow: hidden; background: linear-gradient(180deg, #1a1640, #0a0a16); border: 1.5px solid rgba(185, 176, 255, 0.7); box-shadow: 0 0 50px 2px rgba(124, 108, 255, 0.6), inset 0 20px 40px rgba(124, 108, 255, 0.35); color: var(--faint); font-size: 15px; margin-top: -60px; }
+  .ring :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .orbit-ring { position: absolute; left: 50%; top: calc(50% - 30px); width: min(380px, 85%); aspect-ratio: 380 / 120; translate: -50% -50%; rotate: -14deg; border-radius: 50%; border: 1.2px solid rgba(185, 176, 255, 0.45); box-shadow: 0 0 6px rgba(124, 108, 255, 0.8); }
+  .orbit-ring i { position: absolute; right: 6%; top: 18%; width: 10px; height: 10px; border-radius: 50%; background: var(--hi); box-shadow: 0 0 14px var(--acc); }
+  .who { position: absolute; left: 20px; right: 20px; bottom: 20px; padding: 16px 20px; border-radius: 18px; text-align: left; }
+  .who b { display: block; font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+  .who small { font-size: 14px; color: var(--faint); }
+  .intro { grid-column: span 7; display: flex; flex-direction: column; gap: 18px; }
+  .big-p { font-weight: 300; font-size: clamp(18px, 1.7vw, 22px); line-height: 1.55; color: rgba(238, 240, 255, 0.86); }
+  .small-p { font-weight: 300; font-size: 17px; line-height: 1.6; color: var(--faint); }
+  .mini-stats { margin-top: auto; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .mini-stats div { display: grid; gap: 4px; padding-left: 16px; border-left: 1px solid rgba(255, 255, 255, 0.1); }
+  .mini-stats b { font-weight: 300; font-size: clamp(30px, 3.4vw, 44px); letter-spacing: -0.04em; line-height: 1.1; }
+  .mini-stats span { font-size: 13px; color: var(--faint); }
+  .loc, .edu, .kit { grid-column: span 4; min-height: 300px; }
+  .bento h3 { margin-top: 10px; font-weight: 500; font-size: 24px; letter-spacing: -0.03em; }
+  .sub { margin-top: 6px; font-size: 14px; color: var(--faint); }
+  .dots { position: relative; margin-top: 30px; display: grid; grid-template-columns: repeat(18, 1fr); gap: 16px 0; }
+  .dots i { width: 3px; height: 3px; border-radius: 50%; background: rgba(255, 255, 255, 0.12); }
+  .dots i.near { background: rgba(185, 176, 255, 0.7); }
+  .ping { position: absolute; left: calc(12 / 18 * 100%); top: 52px; width: 12px; height: 12px; margin: -4.5px; border-radius: 50%; background: var(--hi); box-shadow: 0 0 16px 2px var(--acc); }
+  .ping::after { content: ''; position: absolute; inset: -14px; border-radius: 50%; border: 1px solid rgba(185, 176, 255, 0.6); animation: ripple 2.4s var(--ease) infinite; }
+  .edu ul { margin-top: 22px; display: grid; gap: 18px; }
+  .edu li { display: flex; gap: 12px; }
+  .ei { flex: none; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 11px; color: var(--core); background: rgba(124, 108, 255, 0.12); border: 1px solid rgba(124, 108, 255, 0.4); box-shadow: 0 0 14px rgba(124, 108, 255, 0.3); }
+  .edu b { display: block; font-weight: 500; font-size: 17px; letter-spacing: -0.01em; }
+  .edu small { font-size: 13px; color: var(--faint); }
+  .tools { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .tools li { display: grid; justify-items: center; gap: 8px; }
+  .tools span { display: grid; place-items: center; width: 60px; height: 60px; border-radius: 18px; font-weight: 600; font-size: 15px; color: #fff; background: linear-gradient(135deg, var(--f1), var(--f2)); box-shadow: 0 0 20px color-mix(in srgb, var(--f1) 35%, transparent), inset 0 1px 0 rgba(255, 255, 255, 0.35); transition: transform 0.45s var(--spring); }
+  .tools li:hover span { transform: translateY(-4px) rotate(-4deg); }
+  .tools small { font-size: 12px; color: var(--faint); }
+
+  /* ---------- process ---------- */
+  .arc-wrap { position: relative; aspect-ratio: 1200 / 700; }
+  .planet { position: absolute; left: 50%; top: 42%; width: 44%; aspect-ratio: 1; border-radius: 50%; transform: translateX(-50%); background: linear-gradient(180deg, #15123d, #08081a 6%, var(--bg) 14%); box-shadow: 0 0 0 1.5px rgba(228, 224, 255, 0.9), 0 0 54px 6px rgba(124, 108, 255, 0.7), inset 0 24px 50px rgba(124, 108, 255, 0.3); -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent 60%); mask-image: linear-gradient(180deg, #000 30%, transparent 60%); }
+  .planet::before { content: ''; position: absolute; inset: -40% -60% 20%; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, rgba(124, 108, 255, 0.3), transparent); }
+  .arc { position: absolute; left: 0; top: 0; width: 100%; height: auto; overflow: visible; }
+  .arc path { fill: none; stroke-linecap: round; }
+  .arc .base { stroke: rgba(255, 255, 255, 0.07); stroke-width: 1.5; }
+  .arc .draw { stroke: url(#arcG); stroke-width: 2.6; filter: drop-shadow(0 0 10px rgba(124, 108, 255, 0.85)); }
+  .steps { position: absolute; left: 0; top: 0; width: 100%; aspect-ratio: 1200 / 460; }
+  .step { position: absolute; left: var(--x); top: var(--y); width: 0; height: 0; }
+  .node { position: absolute; left: -25px; top: -25px; display: grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; font: 600 15px var(--f); color: #0a0a1a; background: #1a1838; color: var(--faint); box-shadow: 0 0 0 1px rgba(185, 176, 255, 0.35); transition: background 0.6s, box-shadow 0.6s, color 0.6s, transform 0.6s var(--spring); }
+  .node::before { content: ''; position: absolute; inset: -12px; border-radius: 50%; border: 1px solid rgba(185, 176, 255, 0.3); }
+  .step.lit .node { color: #0a0a1a; background: linear-gradient(180deg, var(--hi), var(--acc)); box-shadow: 0 0 24px rgba(124, 108, 255, 0.9), inset 0 1px 0 rgba(255, 255, 255, 0.7); transform: scale(1.06); }
+  .step.hot.lit .node::after { content: ''; position: absolute; inset: -12px; border-radius: 50%; border: 1px solid rgba(185, 176, 255, 0.7); animation: ripple 2.6s var(--ease) infinite; }
+  .scard { position: absolute; left: -107px; top: 52px; width: 214px; display: grid; gap: 9px; padding: 18px; border-radius: 20px; text-align: left; opacity: 0.35; transform: translateY(14px); transition: opacity 0.7s var(--ease), transform 0.8s var(--ease); }
+  .step.lit .scard { opacity: 1; transform: none; }
+  .step.hot .scard { border-color: rgba(185, 176, 255, 0.5); }
+  .step:first-child .scard { left: -40px; }
+  .step:last-child .scard { left: -174px; }
+  .scard h3 { font-weight: 500; font-size: 19px; letter-spacing: -0.02em; }
+  .scard p { font-weight: 300; font-size: 13.5px; line-height: 1.55; color: var(--muted); }
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chips span { padding: 3px 9px; border-radius: 999px; font-size: 11px; color: var(--core); background: rgba(124, 108, 255, 0.08); border: 1px solid rgba(124, 108, 255, 0.28); }
+
+  /* ---------- experience ---------- */
+  .narrow { --w: 1000px; }
+  .timeline { position: relative; display: grid; gap: 16px; padding-left: 40px; }
+  .timeline::before, .timeline::after { content: ''; position: absolute; left: 0; top: 30px; bottom: 30px; width: 2px; border-radius: 2px; }
+  .timeline::before { background: rgba(255, 255, 255, 0.07); }
+  .timeline::after { background: linear-gradient(180deg, var(--core), var(--acc)); box-shadow: 0 0 10px rgba(124, 108, 255, 0.7); transform-origin: top; transform: scaleY(var(--fill, 0)); }
+  .job { display: grid; grid-template-columns: 220px 1fr; gap: 32px; padding: 28px 32px; border-radius: 22px; }
+  .job::before { content: ''; position: absolute; left: -46px; top: 38px; width: 12px; height: 12px; border-radius: 50%; background: rgba(185, 176, 255, 0.6); box-shadow: 0 0 8px rgba(124, 108, 255, 0.6); }
+  .job { overflow: visible; }
+  .job.on { background: linear-gradient(180deg, #15133a, #0b0b1c); border-color: rgba(185, 176, 255, 0.45); box-shadow: 0 0 50px rgba(124, 108, 255, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+  .job.on::before { width: 16px; height: 16px; left: -48px; background: var(--hi); box-shadow: 0 0 16px var(--acc); }
+  .j-l { display: grid; align-content: start; justify-items: start; gap: 10px; }
+  .j-l .mono { font-size: 13px; color: var(--faint); }
+  .job.on .j-l .mono { color: var(--core); }
+  .j-l .label { font-size: 11px; padding: 3px 9px; color: var(--fg); }
+  .j-r { display: grid; gap: 8px; }
+  .j-r h3 { font-weight: 500; font-size: 24px; letter-spacing: -0.03em; }
+  .co { font-size: 15px; color: var(--muted); }
+  .tx { font-weight: 300; font-size: 15.5px; line-height: 1.6; color: var(--muted); }
+
+  /* ---------- cta ---------- */
+  .cta { position: relative; overflow: hidden; isolation: isolate; display: grid; justify-items: center; gap: 24px; padding: clamp(60px, 8vw, 96px) 24px clamp(170px, 20vw, 220px); border-radius: 36px; text-align: center; background: linear-gradient(180deg, #0f0d2a, var(--bg)); border: 1px solid rgba(185, 176, 255, 0.4); box-shadow: 0 0 80px rgba(124, 108, 255, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.08); }
+  .cta .h1 { font-size: clamp(40px, 5.4vw, 72px); max-width: 900px; }
+  .cta .lead { max-width: 560px; }
+  .grid-bg { position: absolute; inset: 0; z-index: -1; background-image: linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px); background-size: 48px 48px; -webkit-mask-image: radial-gradient(ellipse 55% 70% at 50% 30%, #000 15%, transparent 72%); mask-image: radial-gradient(ellipse 55% 70% at 50% 30%, #000 15%, transparent 72%); animation: gridmove 14s linear infinite; }
+  @keyframes gridmove { to { background-position: 48px 48px; } }
+  .cone { position: absolute; z-index: -1; left: 50%; top: -20px; width: 600px; height: 460px; transform: translateX(-50%); background: linear-gradient(180deg, rgba(185, 176, 255, 0.28), rgba(124, 108, 255, 0)); clip-path: polygon(45% 0, 55% 0, 100% 100%, 0 100%); filter: blur(16px); animation: breathe 6s ease-in-out infinite; }
+  .rings { position: absolute; z-index: -1; left: 50%; bottom: 40px; width: 0; height: 0; }
+  .rings i { position: absolute; width: var(--w); height: var(--h); margin: calc(var(--h) / -2) 0 0 calc(var(--w) / -2); border-radius: 50%; border: 1.2px solid rgba(185, 176, 255, var(--o)); box-shadow: 0 0 12px rgba(124, 108, 255, calc(var(--o) * 0.8)); }
+  .rings i::after { content: ''; position: absolute; left: 50%; top: -4px; width: 7px; height: 7px; border-radius: 50%; background: var(--hi); box-shadow: 0 0 10px var(--acc); offset-path: ellipse(50% 50% at 50% 50%); offset-distance: 0%; animation: orbit var(--d) linear infinite; }
+  @keyframes orbit { to { offset-distance: 100%; } }
+  .rings::before { content: ''; position: absolute; left: -350px; top: -130px; width: 700px; height: 260px; background: radial-gradient(closest-side, rgba(124, 108, 255, 0.4), transparent); }
+
+  /* ---------- responsive ---------- */
+  @media (max-width: 1000px) {
+    .work-card.wide, .work-card.narrow, .work-card.half { grid-column: span 6; }
+    .work-card.strip, .see-all { grid-column: span 12; }
+    .portrait, .intro { grid-column: span 12; }
+    .loc, .edu, .kit { grid-column: span 6; }
+    .kit { grid-column: span 12; }
+    .chip { display: none; }
+  }
+  @media (max-width: 860px) {
+    .arc-wrap { aspect-ratio: auto; }
+    .planet, .arc { display: none; }
+    .steps { position: static; aspect-ratio: auto; display: grid; gap: 14px; }
+    .step { position: relative; left: 0; top: 0; width: auto; height: auto; display: flex; gap: 16px; align-items: flex-start; }
+    .node, .step .scard, .step:first-child .scard, .step:last-child .scard { position: static; }
+    .node { flex: none; position: relative; left: 0; top: 0; }
+    .scard { width: auto; flex: 1; opacity: 1; transform: none; }
+    .step .node { color: #0a0a1a; background: linear-gradient(180deg, var(--hi), var(--acc)); box-shadow: 0 0 20px rgba(124, 108, 255, 0.8); }
+  }
+  @media (max-width: 720px) {
+    .stats { grid-template-columns: 1fr; gap: 40px; }
+    .stat + .stat::before { left: 20%; right: 20%; top: -20px; bottom: auto; width: auto; height: 1px; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.14), transparent); }
+    .work-grid .work-card, .work-grid:not([data-filter='all']) .work-card, .loc, .edu { grid-column: span 12; }
+    .work-card.strip { flex-direction: column; align-items: stretch; padding: 12px 12px 22px; }
+    .work-card.strip .wc-img { width: auto; aspect-ratio: 808 / 560; }
+    .work-card.strip .wc-body { padding: 18px 10px 0; }
+    .job { grid-template-columns: 1fr; gap: 12px; padding: 24px; }
+    .timeline { padding-left: 28px; }
+    .job::before { left: -34px; }
+    .job.on::before { left: -36px; }
+    .shot.s1, .shot.s3 { width: 44vw; }
+    .shot.s2 { width: 74vw; }
+    .stage { height: 64vw; }
+    .be-btn { padding-left: 20px; }
+  }
+</style>

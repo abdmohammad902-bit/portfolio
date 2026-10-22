@@ -1,0 +1,75 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site.js';
+
+interface Props { title?: string; description?: string; accent?: string; image?: string }
+const {
+  title = `${site.fullName} — ${site.role}`,
+  description = 'UI/UX & product designer crafting web apps, mobile apps, SaaS dashboards and AI interfaces — from the first research question to the final pixel.',
+  accent = '124, 108, 255',
+  image = '/work/cover-mushaf.webp',
+} = Astro.props;
+const year = new Date().getFullYear();
+const path = Astro.url.pathname;
+const home = path === '/' ? '' : '/';
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#05060a" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={image} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body style={`--a:${accent}`}>
+    <div class="prog" aria-hidden="true"></div>
+    <header class="nav">
+      <nav class="nav-in" aria-label="Main">
+        <a class="logo" href="/" aria-label={`${site.name} — home`}><span class="mark" aria-hidden="true"></span>{site.name}</a>
+        <div class="links">
+          <a href={`${home}#work`}>Work</a>
+          <a href={`${home}#about`}>About</a>
+          <a href={`${home}#process`}>Process</a>
+          <a href={`${home}#experience`}>Experience</a>
+          <a href={`${home}#contact`}>Contact</a>
+        </div>
+        <div class="acts">
+          <a class="ghost" href={site.behance} target="_blank" rel="noopener">Behance ↗</a>
+          <a class="btn btn-p btn-sm" href={`mailto:${site.email}`}>Let’s talk</a>
+        </div>
+      </nav>
+    </header>
+
+    <main><slot /></main>
+
+    <footer class="foot">
+      <div class="seam"></div>
+      <div class="wrap">
+        <div class="foot-row">
+          <a class="logo" href="/"><span class="mark" aria-hidden="true"></span>{site.name}</a>
+          <div class="foot-links">
+            <a href={`${home}#work`}>Work</a>
+            <a href={`${home}#about`}>About</a>
+            <a href={`${home}#process`}>Process</a>
+            <a href={`${home}#experience`}>Experience</a>
+            <a href={site.behance} target="_blank" rel="noopener">Behance</a>
+            <a href={site.linkedin} target="_blank" rel="noopener">LinkedIn</a>
+          </div>
+        </div>
+        <p class="copy">© {year} {site.fullName} · Designed in Figma, built by hand.</p>
+      </div>
+      <div class="wordmark" aria-hidden="true">ABDUL RAHMAN</div>
+    </footer>
+
+    <script>
+      import '../scripts/motion.js';
+    </script>
+  </body>
+</html>

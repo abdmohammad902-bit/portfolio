@@ -1,0 +1,140 @@
+---
+import Base from '../../layouts/Base.astro';
+import '../../styles/case.css';
+
+const chapters = [
+  {
+    id: 'problem', k: 'The problem',
+    title: 'Everything a reader needs existed — just not in one place.',
+    text: 'Reading, tafsir, translation and listening were spread across different sites, each with its own layout and logic. None of them helped people build a daily reading habit.',
+    imgs: [['mushaf-problem', 'Problem vs. solution: scattered sites against one calm platform']],
+  },
+  {
+    id: 'research', k: 'Research',
+    title: 'Four Quran platforms under the microscope',
+    text: 'I audited Quran.com, IslamicFinder, Muslim Central and Tanzil for features, strengths, weaknesses and UI quality, then grouped 60+ research notes into themes.',
+    nums: [['4', 'competitors audited'], ['60+', 'research notes'], ['5', 'key insights']],
+    imgs: [['mushaf-competitive', 'Competitive analysis board']],
+  },
+  {
+    id: 'people', k: 'Who we designed for',
+    title: 'Two readers, two very different days',
+    text: 'A daily reader who wants to pick up exactly where he left off, and a learner who needs meaning, not just the Arabic text.',
+    imgs: [['mushaf-personas', 'Personas: Yousef, the daily reader, and Sara, the learner']],
+  },
+  {
+    id: 'flows', k: 'Ideate · journeys & flows',
+    title: 'Mapping the day before the screens',
+    text: 'A journey map showed exactly where reading breaks down; the flow chart then mapped every path a reader can take from the home page.',
+    imgs: [['mushaf-journey', 'User journey with emotion curve'], ['mushaf-flow', 'Website flow chart']],
+  },
+  {
+    id: 'system', k: 'Design system',
+    title: 'A quiet palette and one sans family',
+    text: 'Colours and type pulled from the final screens became tokens and components, so 40+ screens stay consistent. Uthmanic script for the Quran, a sans for everything else.',
+    imgs: [['mushaf-tokens', 'Colour, type, radius and spacing tokens']],
+  },
+];
+const toc = [...chapters.map((c) => [c.id, c.k.split(' · ')[0]]), ['final', 'Final UI'], ['testing', 'Testing'], ['learned', 'What I learned']];
+---
+<Base title="Mushaf Eqraa — UX/UI case study · Abdul Rahman" description="A calm Quran web platform: research, flows, design system, final UI and design QA." accent="47, 211, 154" image="/work/cover-mushaf.webp">
+  <section class="c-hero">
+    <div class="blob one"></div>
+    <div class="wrap">
+      <a class="back" href="/#work">← All work</a>
+      <div class="c-head">
+        <div class="pills" data-reveal><span class="label">Case study</span><span class="tag">Web platform + Admin</span><span class="tag">UX research</span></div>
+        <h1 class="c-title grad split">Mushaf Eqraa</h1>
+        <p class="c-sub acc" data-reveal style="--d:300">A calm place to read, understand and recite the Quran.</p>
+        <dl class="meta" data-reveal style="--d:450">
+          <div><dt>Role</dt><dd>UI/UX Designer — research, UX, UI, design QA</dd></div>
+          <div><dt>Company</dt><dd>Misraj Technology</dd></div>
+          <div><dt>Platform</dt><dd>Web app + Admin dashboard</dd></div>
+          <div><dt>Tools</dt><dd>Figma · FigJam</dd></div>
+        </dl>
+      </div>
+      <div class="blob two"></div>
+      <figure class="cover" data-reveal style="--d:200"><img src="/work/cover-mushaf.webp" alt="Mushaf Eqraa cover — the reader on a laptop" width="808" height="632" fetchpriority="high" /></figure>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="wrap">
+      <p class="eyebrow" data-reveal>TL;DR</p>
+      <div class="tldr">
+        <div data-reveal><span class="num">01</span><h3>The problem</h3><p>Quran websites were scattered, dated and hard to build a habit around — reading, tafsir and listening lived on different sites.</p></div>
+        <div data-reveal style="--d:120"><span class="num hl">02</span><h3>What I did</h3><p>Researched four competitors, mapped two reader personas, then designed the full web platform and its admin dashboard.</p></div>
+        <div data-reveal style="--d:240"><span class="num">03</span><h3>The result</h3><p>A calm reader with translation, tafsir, audio and AI recitation — reviewed screen by screen in design QA before launch.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:20px">
+    <div class="wrap story">
+      <nav class="toc" aria-label="On this page" data-toc>
+        <p>ON THIS PAGE</p>
+        {toc.map(([id, l]) => <a href={`#${id}`}>{l}</a>)}
+        <div class="toc-bar"><i></i></div>
+        <span class="toc-pct">0%</span>
+      </nav>
+      <div class="chapters">
+        {chapters.map((c, i) => (
+          <article class="chap" id={c.id}>
+            <p class="kicker" data-reveal><span>{String(i + 1).padStart(2, '0')}</span><span>{c.k}</span></p>
+            <h2 class="grad" data-reveal>{c.title}</h2>
+            <p data-reveal>{c.text}</p>
+            {c.nums && <div class="nums" data-reveal>{c.nums.map(([n, l]) => <div><b>{n}</b><span>{l}</span></div>)}</div>}
+            {c.imgs.map(([src, alt]) => <figure class="fig" data-reveal><img src={`/work/${src}.webp`} alt={alt} loading="lazy" /></figure>)}
+          </article>
+        ))}
+
+        <article class="chap" id="final">
+          <p class="kicker" data-reveal><span>06</span><span>Final UI</span></p>
+          <h2 class="grad" data-reveal>A reading mode, not a web page.</h2>
+          <p data-reveal>The reader hides the site around it: a compact bar on top, the page in the middle, the player at the bottom.</p>
+          <div class="show-grid">
+            <figure class="shot-fig hero full" data-reveal><div class="fig"><img src="/work/mushaf-reading.webp" alt="Two-page Mushaf reading mode" loading="lazy" /></div><figcaption><b>Two-page Mushaf</b><span>Quran · Translation · Tafsir tabs, AI Recite and Listen one click away.</span></figcaption></figure>
+            <figure class="shot-fig" data-reveal><div class="fig"><img src="/work/mushaf-index.webp" alt="Quran index" loading="lazy" /></div><figcaption><b>Quran index</b><span>Browse by Surah, Juz or revelation order — or search from the hero.</span></figcaption></figure>
+            <figure class="shot-fig" data-reveal style="--d:120"><div class="fig"><img src="/work/mushaf-translation.webp" alt="Translation and tafsir cards" loading="lazy" /></div><figcaption><b>Every verse becomes a card</b><span>Translation and tafsir modes with actions on each verse.</span></figcaption></figure>
+            <figure class="shot-fig" data-reveal><div class="fig tall"><img src="/work/mushaf-home.webp" alt="Home page, top to bottom" loading="lazy" /></div><figcaption><b>The home page</b><span>Every section is an entry point into a feature.</span></figcaption></figure>
+            <figure class="shot-fig" data-reveal style="--d:120"><div class="fig tall"><img src="/work/mushaf-profile.webp" alt="Profile and account screens" loading="lazy" /></div><figcaption><b>A profile that tells your reading story</b><span>Program progress, notes, bookmarks and favourite reciters.</span></figcaption></figure>
+            <figure class="shot-fig full" data-reveal><div class="fig"><img src="/work/mushaf-admin.webp" alt="Admin dashboard" loading="lazy" /></div><figcaption><b>The other side: running the platform</b><span>Users, admins, biographies, daily tafsir and messages. Dashboard figures are sample data.</span></figcaption></figure>
+          </div>
+        </article>
+
+        <article class="chap" id="testing">
+          <p class="kicker" data-reveal><span>07</span><span>Testing</span></p>
+          <h2 class="grad" data-reveal>20 screens, reviewed against the build</h2>
+          <p data-reveal>I reviewed the developed website screen by screen against the Figma design and wrote each issue on the screenshot itself — navigation, fidelity, clarity and the AI recitation flow.</p>
+          <figure class="fig" data-reveal><img src="/work/mushaf-qa.webp" alt="Design QA findings grouped into four themes" loading="lazy" /></figure>
+        </article>
+
+        <article class="chap" id="learned">
+          <p class="kicker" data-reveal><span>08</span><span>What I learned</span></p>
+          <h2 class="grad" data-reveal>Three things I’d keep doing</h2>
+          <ol class="learn">
+            <li data-reveal><span class="num hl">01</span><div><b>Treat sacred text differently from UI</b><p>Uthmanic script for the Quran, a sans for everything else — they never share a typeface.</p></div></li>
+            <li data-reveal><span class="num hl">02</span><div><b>QA is part of design</b><p>Most issues appeared between Figma and the build; annotated screenshots fixed them fastest.</p></div></li>
+            <li data-reveal><span class="num hl">03</span><div><b>Validate with real readers next</b><p>Personas and journeys were assumption-based; the next step is moderated usability testing.</p></div></li>
+          </ol>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec next-wrap">
+    <div class="seam"></div>
+    <div class="wrap">
+      <p class="eyebrow">Next project</p>
+      <a class="next card spot" href="/work/growth" style="--na:61,91,255;--ca:61,91,255;--nbg:#0c0e24;background:linear-gradient(180deg,#121535,#08090f);border-color:rgba(61,91,255,.4)">
+        <div class="n-copy" style="text-align:left">
+          <span class="mono">Landing page · SaaS</span>
+          <h3 class="grad">Growth</h3>
+          <p>A business-growth SaaS landing page — ten sections that tell one story.</p>
+          <span class="btn btn-p" style="justify-self:start">View the project <span class="arr">→</span></span>
+        </div>
+        <div class="n-img"><img src="/work/cover-growth.webp" alt="" loading="lazy" /></div>
+      </a>
+    </div>
+  </section>
+</Base>
